@@ -97,7 +97,6 @@ extension LinkedList {
       tail!.next = Node(value: value)
       tail = tail!.next
     }
-
 }
 
 var list2 = LinkedList<Int>()
@@ -152,3 +151,100 @@ var middleNode = list3.node(at: 0)!
 list3.insert(-1, after: middleNode)
 
 print("list 3",list3)
+
+
+//MARK: Removing values from the list
+//TODO: POP -- remove the head
+
+extension LinkedList {
+    public mutating func pop()-> Value?{
+        defer {
+            head = head?.next
+            if isEmpty {
+                tail = nil
+            }
+        }
+        return head?.value
+    }
+}
+
+var list4 = LinkedList<Int>()
+list4.push(6)
+list4.push(5)
+list4.push(4)
+list4.push(3)
+list4.push(2)
+list4.push(1)
+
+print("Before popping list: \(list4)")
+let poppedValue = list4.pop()
+print("After popping list: \(list4)")
+print("Popped value: " + String(describing: poppedValue))
+
+
+//MARK: Removing Last Item
+//TODO: removeLast -- remove the tail
+
+
+extension LinkedList {
+    public mutating func removeLast()-> Value?{
+        
+        guard let head = head else {
+            return nil
+        }
+        guard head.next != nil else {
+            return pop()
+        }
+        
+        var prev = head
+        var current = head
+        
+        while let next = current.next {
+            prev = current
+            current = next
+        }
+        
+        prev.next = nil
+        tail = prev
+        return current.value
+    }
+}
+
+var list5 = LinkedList<Int>()
+list5.push(3)
+list5.push(2)
+list5.push(1)
+
+print("Before removing last node: \(list5)")
+let removedValue = list5.removeLast()
+
+print("After removing last node: \(list5)")
+print("Removed value: " + String(describing: removedValue))
+
+// MARK: remove(after:)
+// TODO: remove item at index
+
+extension LinkedList {
+    @discardableResult
+    public mutating func remove(after node: Node<Value>) -> Value? {
+      defer {
+        if node.next === tail {
+          tail = node
+        }
+        node.next = node.next?.next
+      }
+      return node.next?.value
+    }
+}
+
+var list6 = LinkedList<Int>()
+list6.push(3)
+list6.push(2)
+list6.push(1)
+
+print("Before removing at particular index: \(list6)")
+let node = list6.node(at: 0)!
+let removedAfterIndex = list6.remove(after: node)
+
+print("After removing \(list6)")
+print("Removed value: " + String(describing: removedAfterIndex))
