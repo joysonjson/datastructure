@@ -7,11 +7,11 @@ struct Queue<T> {
         data.append(element)
     }
 
-    mutating func dequeue() {
+    mutating func dequeue()  -> T?{
         if (data.isEmpty) {
-            return
+            return nil
         }
-        data.removeFirst()
+        return data.removeFirst()
     }
 }
 extension Queue : CustomDebugStringConvertible {
@@ -28,3 +28,38 @@ queue.dequeue()
 
 print(queue)
 
+// using 2 ques to reduce remove O(n) to O(1)
+
+
+struct OptimisedQueue<T> {
+    private var enqueData: [T] = []
+    private var dequeData: [T] = []
+
+    mutating func enqueue(_ element: T) {
+        enqueData.append(element)
+    }
+
+    mutating func dequeue() -> T {
+        if (dequeData.isEmpty) {
+            dequeData = enqueData.reversed()
+            enqueData.removeAll()
+
+        }
+        return dequeData.removeLast()
+    }
+}
+extension OptimisedQueue : CustomDebugStringConvertible {
+    var debugDescription: String {
+        return "\(enqueData.map{ $0 })"
+    }
+}
+
+print("++++++++++++++++++++++++++++++")
+
+var queue2 = OptimisedQueue<String>()
+queue2.enqueue("Ray")
+queue2.enqueue("Brian")
+queue2.enqueue("Eric")
+queue2.dequeue()
+
+print(queue)
